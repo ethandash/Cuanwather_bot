@@ -5,8 +5,8 @@ from telegram import Bot
 import asyncio
 
 # Ambil token dari environment
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")  # ID kamu (bisa dari @userinfobot)
+TELEGRAM_TOKEN = os.getenv("8470753110:AAGEVdpJAU3RUoBjcIu3Wwve-2oKgyVVHoE")
+CHAT_ID = os.getenv("6608544965")  # ID kamu (bisa dari @userinfobot)
 
 # Info airdrop (nanti bisa dari web scraping atau API)
 def get_airdrop_info():
