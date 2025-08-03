@@ -1,0 +1,5 @@
+from datetime import datetime
+
+def log_activity(pesan, jenis):
+    with open("logs/activity.log", "a") as f:
+        f.write(f"[{datetime.now()}] {jenis}: {pesan[:100]}...\n")
