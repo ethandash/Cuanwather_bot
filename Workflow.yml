@@ -1,27 +1,30 @@
-name: 🚀 CuanWatcher - Test
+name: 🚀 CuanWatcher - Auto Update
 
 on:
   workflow_dispatch:  # Bisa dijalankan manual
   schedule:
-    - cron: '0 * * * *'  # Tiap jam
+    - cron: '0 * * * *'  # Jalankan tiap jam (bisa diganti: '0 9 * * *' untuk sekali sehari)
 
 jobs:
-  test-bot:
+  send-update:
     runs-on: ubuntu-latest
     steps:
-      - name: 🔁 Checkout
+      - name: 🔁 Checkout Kode
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python
+      - name: 🐍 Setup Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: 📦 Install
-        run: pip install python-telegram-bot
+      - name: 📦 Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install python-telegram-bot openai
 
-      - name: 🤖 Jalankan
+      - name: 🤖 Jalankan CuanWatcher
         run: python app.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          QWEN_API_KEY: ${{ secrets.QWEN_API_KEY }}  # ← Penting untuk AI scam detection!
