@@ -1,32 +1,26 @@
-# .github/workflows/airdrop-bot.yml
-name: 🚀 CuanWatcher Bot
+# app.py - Versi minimal, pasti jalan
+import os
+from telegram import Bot
+import asyncio
 
-on:
-  workflow_dispatch:  # Bisa dijalankan manual
-  schedule:
-    - cron: '0 * * * *'  # Jalankan tiap jam (pada menit ke-0)
+# Ambil token dari environment
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-jobs:
-  send-airdrop:
-    name: 📬 Kirim Airdrop Update
-    runs-on: ubuntu-latest
+async def send_test_message():
+    if not TELEGRAM_TOKEN or not CHAT_ID:
+        print("Error: Token atau Chat ID kosong!")
+        return
+    
+    bot = Bot(token=TELEGRAM_TOKEN)
+    try:
+        await bot.send_message(
+            chat_id=CHAT_ID,
+            text="🟢 CuanWatcher: Bot berhasil jalan! 🎉\n\nIni pesan uji coba pertama."
+        )
+        print("Pesan berhasil dikirim!")
+    except Exception as e:
+        print("Gagal kirim pesan:", e)
 
-    steps:
-      - name: 🔁 Checkout kode
-        uses: actions/checkout@v4
-
-      - name: 🐍 Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: 📦 Install dependensi
-        run: |
-          pip install --upgrade pip
-          pip install python-telegram-bot
-
-      - name: 🤖 Jalankan bot
-        run: python app.py
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+if __name__ == "__main__":
+    asyncio.run(send_test_message())
