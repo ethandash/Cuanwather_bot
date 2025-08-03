@@ -1,0 +1,13 @@
+# airdrop-bot.yml - Konfigurasi otomatisasi CuanWatcher
+name: 🚀 CuanWatcher Bot
+
+# Kapan bot dijalankan?
+on:
+  # 1. Bisa dijalankan manual (dari tab Actions)
+  workflow_dispatch:
+  
+  # 2. Otomatis tiap jam (pada menit ke-0)
+  schedule:
+    - cron: '0 * * * *'  # Format: menit jam hari bulan hari-minggu
+
+# T
