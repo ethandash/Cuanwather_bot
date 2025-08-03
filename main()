@@ -1,0 +1,18 @@
+def main():
+    if not TOKEN or not CHAT_ID:
+        print("TOKEN atau CHAT_ID kosong!")
+        return
+
+    application = Application.builder().token(TOKEN).build()
+
+    # Command
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("airdrop", airdrop))
+    application.add_handler(CommandHandler("saldo", saldo))
+    application.add_handler(CommandHandler("faucet", faucet))
+    application.add_handler(CommandHandler("scam", scam))
+
+    # Auto-scan
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo_handler))
+
+    application.run_polling()
