@@ -1,12 +1,12 @@
-name: 🚀 CuanWatcher Bot
+name: 🚀 CuanWatcher - Test
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Bisa dijalankan manual
   schedule:
     - cron: '0 * * * *'  # Tiap jam
 
 jobs:
-  send-airdrop:
+  test-bot:
     runs-on: ubuntu-latest
     steps:
       - name: 🔁 Checkout
@@ -18,13 +18,10 @@ jobs:
           python-version: '3.10'
 
       - name: 📦 Install
-        run: |
-          pip install -r requirements.txt
+        run: pip install python-telegram-bot
 
       - name: 🤖 Jalankan
         run: python app.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          BSCSCAN_KEY: ${{ secrets.BSCSCAN_KEY }}
-          WALLET_ADDRESS: ${{ secrets.WALLET_ADDRESS }}
