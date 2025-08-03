@@ -98,3 +98,34 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Tambah di atas
+from ai_detector import deteksi_scam_ai
+import json
+
+# Load blacklist
+def load_blacklist():
+    try:
+        with open("blacklist.json", "r") as f:
+            return json.load(f)
+    except:
+        return {"scam_domains": [], "known_scam_links": []}
+
+BLACKLIST = load_blacklist()
+
+# Handler baru: auto-scan pesan
+async def echo_handler(update: Update, context: CallbackContext):
+    text = update.message.text or ""
+    lower_text = text.lower()
+
+    # Cek cepat: apakah ada indikasi scam?
+    suspicious = False
+    for domain in BLACKLIST["scam_domains"]:
+        if domain in lower_text:
+            suspicious = True
+            break
+
+    if suspicious:
+        await update.message.reply_text("🔍 CuanWatcher mendeteksi tautan mencurigakan...")
+        result = deteksi_scam_ai(text)
+        await update.message.reply_text(f"🚨 **Peringatan AI**:\n{result}")
