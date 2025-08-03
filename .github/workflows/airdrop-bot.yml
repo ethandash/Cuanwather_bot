@@ -1,0 +1,27 @@
+name: 🚀 CuanWatcher Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  send-airdrop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔁 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install
+        run: pip install python-telegram-bot feedparser
+
+      - name: 🤖 Jalankan
+        run: python app.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
