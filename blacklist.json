@@ -1,0 +1,4 @@
+{
+  "scam_domains": ["bit.ly", "tinyurl.com", "freecuan.win", "claim-now.cc"],
+  "known_scam_links": ["phish.com/giveaway", "airdrop-fake.net"]
+}
