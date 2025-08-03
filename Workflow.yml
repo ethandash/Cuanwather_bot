@@ -7,11 +7,9 @@ on:
 
 jobs:
   send-airdrop:
-    name: 📬 Kirim Airdrop Update
     runs-on: ubuntu-latest
-
     steps:
-      - name: 🔁 Checkout kode
+      - name: 🔁 Checkout
         uses: actions/checkout@v4
 
       - name: 🐍 Setup Python
@@ -19,14 +17,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: 📦 Install dependensi
+      - name: 📦 Install
         run: |
-          pip install --upgrade pip
-          pip install python-telegram-bot
-          pip install feedparser  # ← Wajib untuk baca RSS!
+          pip install -r requirements.txt
 
-      - name: 🤖 Jalankan bot
+      - name: 🤖 Jalankan
         run: python app.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BSCSCAN_KEY: ${{ secrets.BSCSCAN_KEY }}
+          WALLET_ADDRESS: ${{ secrets.WALLET_ADDRESS }}
