@@ -165,3 +165,27 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Kirim ke Qwen untuk jawab natural
         response = qwen_jawab(text)
         await update.message.reply_text(f"🤖: {response}")
+
+async def testnet_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    from testnet import cek_testnet_baru
+    msg = cek_testnet_baru()
+    await update.message.reply_text(msg, parse_mode='Markdown')
+
+async def login_testnet_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Gunakan: /login_testnet [nama] [wallet_address]")
+        return
+    nama = ' '.join(context.args[:-1])
+    wallet = context.args[-1]
+    
+    if not wallet.startswith("0x") and not wallet.startswith("0x"):
+        await update.message.reply_text("❌ Format wallet salah. Harus dimulai dengan 0x")
+        return
+
+    from testnet import login_testnet
+    await update.message.reply_text(f"🔧 CuanBot sedang coba login ke {nama}...")
+    result = login_testnet(nama, wallet)
+    await update.message.reply_text(result)
+
+app.add_handler(CommandHandler("testnet", testnet_list))
+app.add_handler(CommandHandler("login_testnet", login_testnet_cmd))
