@@ -1,0 +1,70 @@
+# testnet.py - Cek testnet terbaru & bantu login
+import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import time
+import os
+
+# Daftar testnet terpercaya
+TESTNET_LIST = [
+    {"name": "BNB Chain Testnet", "url": "https://faucet.bnbchain.org", "chain": "BSC"},
+    {"name": "zkSync Era Testnet", "url": "https://faucet.zksync.io", "chain": "zkSync"},
+    {"name": "Polygon zkEVM", "url": "https://faucet.polygon.technology", "chain": "Polygon"},
+    {"name": "Arbitrum Goerli", "url": "https://faucet.quicknode.com/arbitrum/goerli", "chain": "Arbitrum"},
+    {"name": "Scroll Sepolia", "url": "https://sepolia.scroll.io", "chain": "Scroll"},
+    {"name": "Base Sepolia", "url": "https://sepolia.basescan.org", "chain": "Base"},
+    {"name": "Linea Goerli", "url": "https://goerli.linea.build", "chain": "Linea"}
+]
+
+def cek_testnet_baru():
+    """Kembalikan daftar testnet yang bisa di-claim"""
+    msg = "🌐 **Testnet Aktif (Bisa Claim)**\n\n"
+    for t in TESTNET_LIST:
+        msg += f"📌 [{t['name']}]({t['url']})\n"
+        msg += f"⛓️ {t['chain']}\n\n"
+    msg += "💡 Gunakan: /login_testnet [nama] untuk bantu login"
+    return msg
+
+def setup_driver():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    return webdriver.Chrome(options=options)
+
+def login_testnet(nama_testnet, wallet_address):
+    """
+    Bantu login ke testnet (klik faucet)
+    Contoh: login_testnet("zksync", "0x...")
+    """
+    driver = setup_driver()
+    try:
+        for t in TESTNET_LIST:
+            if nama_testnet.lower() in t['name'].lower():
+                driver.get(t['url'])
+                time.sleep(5)
+
+                # Cek apakah ada form input wallet
+                try:
+                    addr_input = driver.find_element("xpath", "//input[@type='text' or @type='address']")
+                    addr_input.send_keys(wallet_address)
+                    time.sleep(1)
+                except:
+                    pass  # Tidak ada form
+
+                # Cari tombol "Claim" atau "Get Testnet ETH"
+                try:
+                    buttons = driver.find_elements("tag name", "button")
+                    for btn in buttons:
+                        if "claim" in btn.text.lower() or "get" in btn.text.lower():
+                            btn.click()
+                            time.sleep(3)
+                            return f"✅ Berhasil klik claim di {t['name']}! Cek dompet kamu."
+                    return f"⚠️ Tidak ketemu tombol claim. Buka manual: {t['url']}"
+                except:
+                    return f"❌ Gagal klik tombol di {t['name']}"
+        return "❌ Testnet tidak ditemukan."
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+    finally:
+        driver.quit()
