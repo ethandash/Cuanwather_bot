@@ -42,6 +42,32 @@ def should_send_weekly():
     today = datetime.now().weekday()
     return today == 0  # Senin
 
+# prediction.py - tambah fungsi
+def cek_testnet_baru_dari_ai():
+    prompt = """
+    Sebutkan 5 proyek testnet crypto terbaru (bulan ini) yang berpotensi dapat airdrop.
+    Fokus pada:
+    - Proyek Layer 2
+    - zkEVM
+    - Cross-chain
+    - Didukung tim besar
+
+    Format:
+    1. Nama: [nama]
+       URL: [link]
+       Chain: [BSC/zkSync/etc]
+       Potensi Airdrop: [Tinggi/Sedang]
+    """
+    try:
+        response = client.chat.completions.create(
+            model="qwen-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=400
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"❌ Gagal: {str(e)}"
 if should_send_weekly():
     result = prediksi_meledak_2025()
     send_telegram(f"📅 **Update Mingguan: Peluang 2025**\n\n{result}")
+
