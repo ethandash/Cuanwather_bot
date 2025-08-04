@@ -34,3 +34,14 @@ def prediksi_meledak_2025():
         return response.choices[0].message.content
     except Exception as e:
         return f"❌ Gagal prediksi: {str(e)}"
+
+# auto_prediction.py
+from datetime import datetime
+
+def should_send_weekly():
+    today = datetime.now().weekday()
+    return today == 0  # Senin
+
+if should_send_weekly():
+    result = prediksi_meledak_2025()
+    send_telegram(f"📅 **Update Mingguan: Peluang 2025**\n\n{result}")
