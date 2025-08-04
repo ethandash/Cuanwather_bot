@@ -129,3 +129,39 @@ async def echo_handler(update: Update, context: CallbackContext):
         await update.message.reply_text("🔍 CuanWatcher mendeteksi tautan mencurigakan...")
         result = deteksi_scam_ai(text)
         await update.message.reply_text(f"🚨 **Peringatan AI**:\n{result}")
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text.lower()
+    user_id = update.message.from_user.id
+
+    if str(user_id) != os.getenv("OWNER_ID") and str(update.message.chat_id) != CHAT_ID:
+        return
+
+    if "cek" in text and "faucet" in text:
+        result = faucet.cek_status()
+        await update.message.reply_text(result)
+
+    elif "scam" in text or "ini aman?" in text:
+        link = ' '.join(text.split()[2:]) if "scam" in text else text
+        result = await scam.deteksi_scam_ai(link)
+        await update.message.reply_text(result)
+
+    elif "harga" in text and "doge" in text:
+        h = price.get_doge_price()
+        await update.message.reply_text(f"🐕 Harga DOGE: ${h}")
+
+    elif "claim" in text and "semua" in text:
+        result = faucet.claim_semua()
+        await update.message.reply_text(result)
+
+    # 🔥 Fitur Baru: Prediksi Coin Meledak
+    elif "meledak" in text or "potensi 2025" in text or "coin naik akhir tahun" in text:
+        await update.message.reply_text("🔍 CuanBot sedang analisis peluang 2025...")
+        result = prediksi_meledak_2025()
+        await update.message.reply_text(f"🎯 **Prediksi Peluang Akhir 2025**\n\n{result}")
+
+    # 🤖 Mode ngobrol bebas
+    else:
+        # Kirim ke Qwen untuk jawab natural
+        response = qwen_jawab(text)
+        await update.message.reply_text(f"🤖: {response}")
